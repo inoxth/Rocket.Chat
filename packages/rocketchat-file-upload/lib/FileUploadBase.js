@@ -3,7 +3,10 @@
 
 UploadFS.config.defaultStorePermissions = new UploadFS.StorePermissions({
 	insert(userId/*, doc*/) {
-		return userId;
+    if (userId) {
+  		return userId;
+    }
+    return true;
 	},
 	update(userId, doc) {
 		return RocketChat.authz.hasPermission(Meteor.userId(), 'delete-message', doc.rid) || (RocketChat.settings.get('Message_AllowDeleting') && userId === doc.userId);
