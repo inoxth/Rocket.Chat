@@ -112,8 +112,9 @@ class SlackBridge {
 
 	convertSlackMsgTxtToRocketTxtFormat(slackMsgTxt) {
 		if (!_.isEmpty(slackMsgTxt)) {
-			slackMsgTxt = slackMsgTxt.replace(/@everyone/g, '@all');
-			slackMsgTxt = slackMsgTxt.replace(/@channel/g, '@all');
+			slackMsgTxt = slackMsgTxt.replace(/<!everyone>/g, '@all');
+			slackMsgTxt = slackMsgTxt.replace(/<!channel>/g, '@all');
+			slackMsgTxt = slackMsgTxt.replace(/<!here\|@here>/g, '@here');
 			slackMsgTxt = slackMsgTxt.replace(/&gt;/g, '<');
 			slackMsgTxt = slackMsgTxt.replace(/&lt;/g, '>');
 			slackMsgTxt = slackMsgTxt.replace(/&amp;/g, '&');
@@ -899,7 +900,7 @@ class SlackBridge {
 							}
 
 							if (details.comment) {
-								msg.msg = details.comment;
+								msg.msg = this.convertSlackMsgTxtToRocketTxtFormat(details.comment);
 							}
 
 							return RocketChat.sendMessage(rocketUser, msg, rocketChannel, true);
